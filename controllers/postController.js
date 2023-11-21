@@ -64,7 +64,7 @@ const createPost = expressAsyncHandler(async (req, res) => {
   changePostCount(res, category, tags, 'increment')
   const post = new Post({ title, content, author: authorId, category, tags, status, coverImage, summary })
   await post.save()
-  const user = await User.findById(authorId)
+  const user = await User.findById(authorId.toString())
   user.posts = [...user.posts, post._id]
   await user.save()
   handleResponse(res, statusCodes.SUCCESS, 'Post created.', post)

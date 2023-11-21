@@ -20,10 +20,10 @@ const User = require('../models/User')
 const userRouter = express.Router()
 
 // Auth not required
-userRouter.get('/:userId', cacheMiddleware, findUserById)
-// userRouter.get('/:userId', findUserById)
-userRouter.get('/all/featured', cacheMiddleware, findFeaturedUsers)
-// userRouter.get('/all/featured', findFeaturedUsers)
+// userRouter.get('/:userId', cacheMiddleware, findUserById)
+// userRouter.get('/all/featured', cacheMiddleware, findFeaturedUsers)
+userRouter.get('/:userId', findUserById)
+userRouter.get('/all/featured', findFeaturedUsers)
 const registerValidation = [
   body('username').trim().isLength({ min: 3, max: 255 }).withMessage('Should be 3-255 characters long.').escape(),
   body('password').trim().isStrongPassword().withMessage('Should be at least 8 characters and contain lowercase letter, uppercase letter, number and special character.'),
@@ -31,14 +31,6 @@ const registerValidation = [
   body('name').trim().isLength({ min: 3, max: 255 }).withMessage('Should be 3-255 characters long.').escape(),
 ]
 userRouter.post('/register', registerValidation, register)
-// userRouter.post('/registerAll', async (req, res) => {
-//   const data = req.body
-//   data.forEach(async i => {
-//     const user = new User(i)
-//     await user.save()
-//   })
-//   res.send('ok')
-// })
 userRouter.post('/login', login)
 
 // Require auth
@@ -61,6 +53,14 @@ userRouter.put('/update-list-fields', [jwtAuthentication, updateListFieldsValida
 // Require admin auth
 userRouter.get('/', [jwtAuthentication, roleAuthorization(['Admin', 'Staff']), cacheMiddleware], findAllUsers)
 userRouter.put('/:role/:userId', [jwtAuthentication, roleAuthorization(['Admin'])], updateRole)
+userRouter.post('/registerAll', [jwtAuthentication, roleAuthorization(['Admin'])], async (req, res) => {
+  const data = req.body
+  data.forEach(async i => {
+    const user = new User(i)
+    await user.save()
+  })
+  res.send('ok')
+})
 
 module.exports = userRouter
 
