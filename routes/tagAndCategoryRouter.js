@@ -13,7 +13,7 @@ const {
     updateCategoryName,
 } = require('../controllers/tagAndCategoryController')
 const roleAuthorization = require('../middlewares/roleAuthorization')
-const { cacheMiddleware } = require('../config/cacheConfig')
+const cacheMiddleware = require('../config/cacheConfig')
 const { body } = require('express-validator')
 const Tag = require('../models/Tag')
 const Category = require('../models/Category')

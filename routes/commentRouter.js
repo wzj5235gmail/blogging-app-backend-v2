@@ -3,7 +3,7 @@ const { findAllCommentsOfPost, findCommentById, createComment, deleteComment, up
 const jwtAuthentication = require('../middlewares/jwtAuthentication')
 const authorOrAdminAuth = require('../middlewares/authorOrAdminAuth')
 const Comment = require('../models/Comment')
-const { cacheMiddleware } = require('../config/cacheConfig')
+const cacheMiddleware = require('../config/cacheConfig')
 const { body } = require('express-validator')
 const commentRouter = express.Router()
 

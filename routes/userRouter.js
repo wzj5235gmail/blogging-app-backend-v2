@@ -12,7 +12,7 @@ const {
   updateListFields
 } = require('../controllers/userController')
 const roleAuthorization = require('../middlewares/roleAuthorization')
-const { cacheMiddleware } = require('../config/cacheConfig')
+const cacheMiddleware = require('../config/cacheConfig')
 const { body } = require('express-validator')
 const User = require('../models/User')
 

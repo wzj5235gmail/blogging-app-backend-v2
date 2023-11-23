@@ -11,7 +11,7 @@ const jwtAuthentication = require('../middlewares/jwtAuthentication')
 const authorOrAdminAuth = require('../middlewares/authorOrAdminAuth')
 const Post = require('../models/Post')
 const { body } = require('express-validator')
-const { cacheMiddleware } = require('../config/cacheConfig')
+const cacheMiddleware = require('../config/cacheConfig')
 const User = require('../models/User')
 const roleAuthorization = require('../middlewares/roleAuthorization')
 

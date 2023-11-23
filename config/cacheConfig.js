@@ -1,5 +1,5 @@
 const apicache = require("apicache-plus")
-const cacheMiddelware = apicache('5 minutes')
+const cacheMiddleware = apicache('5 minutes')
 // const { Redis } = require("ioredis")
 
 // const config = {
@@ -11,4 +11,4 @@ const cacheMiddelware = apicache('5 minutes')
 // const cacheMiddleware = cacheWithRedis(process.env.CACHE_TIME || '5 minutes')
 
 // module.exports = { cacheMiddleware, redis }
-module.exports = { cacheMiddelware }
+module.exports = cacheMiddleware

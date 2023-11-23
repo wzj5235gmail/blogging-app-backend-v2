@@ -3,7 +3,7 @@ const User = require('../models/User')
 const request = require('supertest')
 const { app,server } = require('../server')
 const bcrypt = require('bcrypt')
-const { redis } = require('../config/cacheConfig')
+// const { redis } = require('../config/cacheConfig')
 const generateToken = require('../helpers/generateToken')
 
 let adminToken
@@ -78,7 +78,7 @@ beforeAll(async () => {
 afterAll(async () => {
     await User.deleteMany({})
     await mongoose.connection.close()
-    await redis.quit()
+    // await redis.quit()
     await server.close()
 })
 
