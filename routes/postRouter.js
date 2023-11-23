@@ -19,10 +19,10 @@ const roleAuthorization = require('../middlewares/roleAuthorization')
 const postRouter = express.Router()
 
 // Auth not required
-// postRouter.get('/', cacheMiddleware, findAllPosts)
-// postRouter.get('/:postId', cacheMiddleware, findPostById)
-postRouter.get('/', findAllPosts)
-postRouter.get('/:postId', findPostById)
+postRouter.get('/', cacheMiddleware, findAllPosts)
+postRouter.get('/:postId', cacheMiddleware, findPostById)
+// postRouter.get('/', findAllPosts)
+// postRouter.get('/:postId', findPostById)
 
 // Require auth
 const createValidations = [

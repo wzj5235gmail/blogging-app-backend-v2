@@ -166,13 +166,23 @@ const update = expressAsyncHandler(async (req, res) => {
     throw new Error(errorMsg)
   }
   const { name, avatar, bio, phone } = matchedData(req)
-  const user = await User.findById(req.user.userId)
+  let user = await User.findById(req.user.userId)
   user.name = name ?? user.name
   user.avatar = avatar ?? user.avatar
   user.bio = bio ?? user.bio
   user.phone = phone ?? user.phone
 
   await user.save()
+
+  const populateFields = ['interests',
+    'follows',
+    'likedComments',
+    { path: 'posts', populate: 'author tags' },
+    { path: 'likes', populate: 'author tags' },
+    { path: 'savedPosts', populate: 'author tags' },
+  ]
+  user = await getObjectOr404(res, User, { _id: req.user.userId }, populateFields)
+  user.password = null
 
   // Respond
   handleResponse(res, statusCodes.SUCCESS, 'User info updated.', user)
@@ -224,6 +234,7 @@ const updateRole = expressAsyncHandler(async (req, res) => {
   const user = await getObjectOr404(res, User, { _id: userId })
   user.role = role
   await user.save()
+  user.password = null
   handleResponse(res, statusCodes.SUCCESS, 'User role updated.', user)
 })
 

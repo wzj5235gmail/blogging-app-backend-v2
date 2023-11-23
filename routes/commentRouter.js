@@ -9,10 +9,10 @@ const commentRouter = express.Router()
 
 
 // Auth not required
-// commentRouter.get('/all/:postId', cacheMiddleware, findAllCommentsOfPost)
-// commentRouter.get('/:commentId', cacheMiddleware, findCommentById)
-commentRouter.get('/all/:postId', findAllCommentsOfPost)
-commentRouter.get('/:commentId', findCommentById)
+commentRouter.get('/all/:postId', cacheMiddleware, findAllCommentsOfPost)
+commentRouter.get('/:commentId', cacheMiddleware, findCommentById)
+// commentRouter.get('/all/:postId', findAllCommentsOfPost)
+// commentRouter.get('/:commentId', findCommentById)
 
 // Require auth
 const createUpdateValidation = [

@@ -20,10 +20,10 @@ const User = require('../models/User')
 const userRouter = express.Router()
 
 // Auth not required
-// userRouter.get('/:userId', cacheMiddleware, findUserById)
-// userRouter.get('/all/featured', cacheMiddleware, findFeaturedUsers)
-userRouter.get('/:userId', findUserById)
-userRouter.get('/all/featured', findFeaturedUsers)
+userRouter.get('/:userId', cacheMiddleware, findUserById)
+userRouter.get('/all/featured', cacheMiddleware, findFeaturedUsers)
+// userRouter.get('/:userId', findUserById)
+// userRouter.get('/all/featured', findFeaturedUsers)
 const registerValidation = [
   body('username').trim().isLength({ min: 3, max: 255 }).withMessage('Should be 3-255 characters long.').escape(),
   body('password').trim().isStrongPassword().withMessage('Should be at least 8 characters and contain lowercase letter, uppercase letter, number and special character.'),

@@ -22,14 +22,14 @@ const Category = require('../models/Category')
 const tagAndCategoryRouter = express.Router()
 
 // Auth not required
-// tagAndCategoryRouter.get('/categories', cacheMiddleware, findAllCategorys)
-// tagAndCategoryRouter.get('/categories/:categoryId', cacheMiddleware, findCategoryById)
-// tagAndCategoryRouter.get('/tags', cacheMiddleware, findAllTags)
-// tagAndCategoryRouter.get('/tags/:tagId', cacheMiddleware, findTagById)
-tagAndCategoryRouter.get('/categories', findAllCategorys)
-tagAndCategoryRouter.get('/categories/:categoryId', findCategoryById)
-tagAndCategoryRouter.get('/tags', findAllTags)
-tagAndCategoryRouter.get('/tags/:tagId', findTagById)
+tagAndCategoryRouter.get('/categories', cacheMiddleware, findAllCategorys)
+tagAndCategoryRouter.get('/categories/:categoryId', cacheMiddleware, findCategoryById)
+tagAndCategoryRouter.get('/tags', cacheMiddleware, findAllTags)
+tagAndCategoryRouter.get('/tags/:tagId', cacheMiddleware, findTagById)
+// tagAndCategoryRouter.get('/categories', findAllCategorys)
+// tagAndCategoryRouter.get('/categories/:categoryId', findCategoryById)
+// tagAndCategoryRouter.get('/tags', findAllTags)
+// tagAndCategoryRouter.get('/tags/:tagId', findTagById)
 
 // Auth required
 tagAndCategoryRouter.post('/tags', jwtAuthentication, body('name').trim().notEmpty().escape(), createTag)
