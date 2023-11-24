@@ -3,6 +3,7 @@ const User = require('../models/User')
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 const bcrypt = require('bcrypt')
 const expressAsyncHandler = require('express-async-handler')
+const generateToken = require('../helpers/generateToken')
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -22,8 +23,23 @@ passport.use(new GoogleStrategy({
         }
         user.lastLogin = new Date()
         await user.save()
-        user.password = null
-        return done(null, user)
+        // const populateFields = ['interests',
+        //     'follows',
+        //     'likedComments',
+        //     { path: 'posts', populate: 'author tags' },
+        //     { path: 'likes', populate: 'author tags' },
+        //     { path: 'savedPosts', populate: 'author tags' },
+        // ]
+        // user = await User.findOne({ email }).populate(populateFields)
+        // user.password = null
+        const payload = {
+            userId: user._id,
+            username: user.username,
+            role: user.role,
+        }
+        const token = await generateToken(payload)
+        // user = { ...user._doc, token }
+        return done(null, { userId: user.id, token })
     })))
 
 passport.serializeUser((user, done) => {
