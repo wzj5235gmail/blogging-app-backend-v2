@@ -14,6 +14,8 @@ const { body } = require('express-validator')
 const cacheMiddleware = require('../config/cacheConfig')
 const User = require('../models/User')
 const roleAuthorization = require('../middlewares/roleAuthorization')
+const Category = require('../models/Category')
+const Tag = require('../models/Tag')
 
 
 const postRouter = express.Router()
@@ -55,15 +57,54 @@ postRouter.post('/unlike/:postId', jwtAuthentication, unlikePost)
 
 
 // Require admin auth
-postRouter.post('/all', [jwtAuthentication, roleAuthorization(['Admin'])], async (req, res) => {
+// postRouter.post('/all', [jwtAuthentication, roleAuthorization(['Admin'])], async (req, res) => {
+postRouter.post('/all', async (req, res) => {
     const data = req.body
-    data.forEach(async i => {
-        const post = new Post(i)
-        await post.save()
-        const user = await User.findById(post.author)
-        user.posts = [...user.posts, post._id]
-        await user.save()
-    })
+    for (const i of data) {
+        await User.findOneAndUpdate(
+            { username: i.author.username },
+            i.author,
+            { upsert: true }
+        )
+        let user = await User.findOne({ username: i.author.username })
+        let userId = user._id
+
+        await Category.findOneAndUpdate(
+            { name: i.category.name },
+            i.category,
+            { upsert: true }
+        )
+        let category = await Category.findOne({ name: i.category.name })
+        let categoryId = category._id
+
+        let tagIds = []
+        for (let t of i.tags) {
+            await Tag.findOneAndUpdate(
+                { name: t.name },
+                t,
+                { upsert: true }
+            )
+            let tag = await Tag.findOne({ name: t.name })
+            tagIds.push(tag._id)
+        }
+        const existingPost = await Post.findOne({ title: i.title })
+        if (!existingPost) {
+            const post = new Post({
+                title: i.title,
+                content: i.content,
+                coverImage: i.coverImage,
+                author: userId,
+                category: categoryId,
+                tags: tagIds,
+                featured: i.featured,
+                publishDate: new Date(i.publishDate),
+            })
+            await post.save()
+            let user = await User.findOne({ username: i.author.username })
+            user.posts = [...user.posts, post._id]
+            await user.save()
+        }
+    }
     res.send('ok')
 })
 

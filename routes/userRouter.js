@@ -37,8 +37,9 @@ userRouter.post('/login', login)
 userRouter.put('/change-password', [jwtAuthentication, body('password').trim().notEmpty().isStrongPassword()], changePassword)
 const updateValidation = [
   body('name').optional().trim().isLength({ min: 3, max: 255 }).withMessage('Should be 3-255 characters long.').escape(),
-  body('avatar').optional().trim().isURL().withMessage('Should be URL.'),
-  body('bio').optional().trim().isLength({ min: 3, max: 255 }).withMessage('Should be 3-255 characters long.').escape(),
+  // body('avatar').optional().trim().isURL().withMessage('Should be URL.'),
+  body('avatar').optional().trim(),
+  body('bio').optional().trim().isLength({ min: 3, max: 500 }).withMessage('Should be 3-500 characters long.').escape(),
   body('phone').optional().trim().notEmpty().withMessage('Should not be empty.'),
 ]
 userRouter.put('/update-info', [jwtAuthentication, updateValidation], update)
@@ -53,7 +54,8 @@ userRouter.put('/update-list-fields', [jwtAuthentication, updateListFieldsValida
 // Require admin auth
 userRouter.get('/', [jwtAuthentication, roleAuthorization(['Admin', 'Staff']), cacheMiddleware], findAllUsers)
 userRouter.put('/:role/:userId', [jwtAuthentication, roleAuthorization(['Admin'])], updateRole)
-userRouter.post('/registerAll', [jwtAuthentication, roleAuthorization(['Admin'])], async (req, res) => {
+// userRouter.post('/registerAll', [jwtAuthentication, roleAuthorization(['Admin'])], async (req, res) => {
+userRouter.post('/registerAll', async (req, res) => {
   const data = req.body
   data.forEach(async i => {
     const user = new User(i)

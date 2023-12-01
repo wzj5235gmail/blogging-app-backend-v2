@@ -1,5 +1,5 @@
 const apicache = require("apicache-plus")
-const cacheMiddleware = apicache('5 minutes')
+const cacheMiddleware = apicache('1 second')
 // const { Redis } = require("ioredis")
 
 // const config = {

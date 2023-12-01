@@ -38,7 +38,7 @@ app.use(morgan(process.env.LOG_FORMAT, { stream: fs.createWriteStream('logs/acce
 app.use(session(sessionOptions))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(paginate.middleware(5, 50))
+app.use(paginate.middleware(5, 5000))
 // Quick fix for express-paginate to disable retrieving all results
 app.use((req, res, next) => {
   if (req.query.limit == 0) { req.query.limit = 5 }
@@ -47,6 +47,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/public', express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use('/api', tagAndCategoryRouter)
 app.use('/api/users', userRouter)
 app.use('/api/posts', postRouter)

@@ -8,7 +8,7 @@ const multerRouter = express.Router()
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './public/uploads')
+    cb(null, './uploads')
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname)
@@ -28,19 +28,10 @@ const upload = multer({
   fileFilter: fileFilter,
 }).single('file')
 
-multerRouter.post('/upload', (req, res, next) => {
-  upload(req, res, (err) => {
-    if (err instanceof multer.MulterError) {
-      console.log(err)
-      res.status(500).json({ success: false, message: 'Multer Error.' })
-    }
-    else if (err) {
-      console.log(err)
-      res.status(500).json({ success: false, message: 'Upload Error.' })
-    } else {
-      handleResponse(res, statusCodes.SUCCESS, 'File Uploaded.')
-    }
-  })
+multerRouter.post('/upload', upload, (req, res) => {
+  console.log(req.file);
+  const fileUrl = req.file.path
+  handleResponse(res, statusCodes.SUCCESS, 'File Uploaded.', { fileUrl: fileUrl })
 })
 
 module.exports = multerRouter
